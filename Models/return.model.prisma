@@ -1,0 +1,14 @@
+model Return {
+    id            String  @id @default(uuid())
+    reason        String
+    status        String
+    userId        String
+    User          User    @relation(name: "ReturnUser", fields: [userId], references: [id])
+    transporterId String?
+    transporter   User?   @relation(name: "ReturnTransporter", fields: [transporterId], references: [id])
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deleted   Boolean   @default(false)
+    deletedAt DateTime?
+}

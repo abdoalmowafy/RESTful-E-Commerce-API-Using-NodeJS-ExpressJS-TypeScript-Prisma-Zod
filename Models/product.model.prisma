@@ -1,0 +1,21 @@
+model Product {
+    id           String   @id @default(uuid())
+    name         String
+    sku          String
+    description  String
+    stock        Int      @default(0)
+    views        Int      @default(0)
+    priceCents   Int      @default(0)
+    salePercent  Int      @default(0)
+    reviews      Review[]
+    warrantyDays Int      @default(14)
+    categoryId   String
+    category     Category @relation(fields: [categoryId], references: [id])
+    wishers      User[]
+
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+    deleted   Boolean     @default(false)
+    CartItem  CartItem[]
+    OrderItem OrderItem[]
+}

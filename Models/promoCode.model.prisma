@@ -1,0 +1,11 @@
+model PromoCode {
+    id               String   @id @default(uuid())
+    code             String
+    description      String
+    discountPercent  Int
+    maxDiscountCents Int
+    validFrom        DateTime
+    validUntil       DateTime
+    cart             Cart[]
+    Order            Order[]
+}

@@ -1,0 +1,41 @@
+model User {
+    id            String    @id @default(uuid())
+    email         String    @unique
+    emailVerified Boolean   @default(false)
+    passwordHash  String
+    name          String
+    gender        Gender
+    dob           DateTime
+    phone         String?
+    phoneVerified Boolean   @default(false)
+    role          Role      @default(NOROLE)
+    cartId        String    @unique
+    cart          Cart      @relation(fields: [cartId], references: [id])
+    addresses     Address[]
+    wishlist      Product[]
+    orders        Order[]   @relation("OrderUser")
+    returns       Return[]  @relation("ReturnUser")
+
+    orderTranports   Order[]  @relation("OrderTransporter")
+    returnTransports Return[] @relation("ReturnTransporter")
+
+    Review Review[]
+    search search[]
+
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deleted   Boolean   @default(false)
+    deletedAt DateTime?
+}
+
+enum Role {
+    ADMIN
+    MODERATOR
+    TRANSPORTER
+    NOROLE
+}
+
+enum Gender {
+    MALE
+    FEMALE
+}

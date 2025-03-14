@@ -1,0 +1,38 @@
+model Order {
+    id                String        @id @default(uuid())
+    userId            String
+    user              User          @relation(fields: [userId], references: [id], name: "OrderUser")
+    transporterId     String?
+    transporter       User?         @relation(fields: [transporterId], references: [id], name: "OrderTransporter")
+    orderItems        OrderItem[]
+    promoCodeId       String?
+    promoCode         PromoCode?    @relation(fields: [promoCodeId], references: [id])
+    totalCents        Int
+    currency          String        @default("EGP")
+    paymentMethod     PaymentMethod
+    deliveryNeeded    Boolean
+    status            OrderStatus
+    PaymobOrderId     String?
+    deliveryAddressId String
+    deliveryAddress   Address       @relation(fields: [deliveryAddressId], references: [id])
+
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    deliveredAt DateTime?
+    deleted     Boolean   @default(false)
+    deletedAt   DateTime?
+}
+
+enum OrderStatus {
+    PAYING
+    PROCESSING
+    ON_THE_WAY
+    DELIVERED
+    CANCELLED
+}
+
+enum PaymentMethod {
+    COD
+    CREDITCARD
+    MOBILEWALLET
+}

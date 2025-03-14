@@ -1,0 +1,8 @@
+model search {
+    id         String   @id @default(uuid())
+    keyWord    String
+    userId     String?
+    user       User?    @relation(fields: [userId], references: [id])
+    categoryId String
+    category   Category @relation(fields: [categoryId], references: [id])
+}

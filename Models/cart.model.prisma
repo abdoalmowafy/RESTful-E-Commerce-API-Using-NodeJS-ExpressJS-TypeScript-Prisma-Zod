@@ -1,0 +1,7 @@
+model Cart {
+    id          String     @id @default(uuid())
+    cartItems   CartItem[]
+    promoCodeId String?
+    promoCode   PromoCode? @relation(fields: [promoCodeId], references: [id])
+    user        User?
+}

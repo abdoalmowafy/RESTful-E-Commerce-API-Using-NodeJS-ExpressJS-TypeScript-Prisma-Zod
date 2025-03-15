@@ -31,7 +31,9 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         if (err instanceof Jwt.JsonWebTokenError) {
             res.status(401).json({ status: 401, message: "Access Denied: Invalid token!" });
         }
-        res.status(500).json({ status: 500, message: "Internal Server Error" });
+        else {
+            res.status(500).json({ status: 500, message: "Internal Server Error" });
+        }
     }
 }
 

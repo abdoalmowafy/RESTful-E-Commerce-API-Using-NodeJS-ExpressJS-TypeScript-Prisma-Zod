@@ -1,16 +1,17 @@
 model Address {
-    id         String  @id @default(uuid())
-    apartment  String
-    floor      String
-    building   String
-    street     String
-    city       String
-    state      String
-    country    String
-    postalCode String
-    userId     String
-    user       User    @relation(fields: [userId], references: [id])
-    Order      Order[]
+    id           String  @id @default(uuid())
+    apartment    String
+    floor        String
+    building     String
+    street       String
+    city         String
+    state        String
+    country      String
+    postalCode   String
+    userId       String
+    user         User    @relation(fields: [userId], references: [id])
+    Order        Order[]
+    storeAddress Boolean @default(false)
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt

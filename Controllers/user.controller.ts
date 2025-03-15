@@ -2,11 +2,10 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { GenderType, User, Address } from '../Models/generated/zod';
-import globalClient from '../prismaClient';
+import { globalClient as prisma } from '../prismaClient';
 import { Router } from "express";
 import verifyToken from '../Middlewares/verifyToken';
 
-const prisma = globalClient;
 const userController = Router();
 
 type UserRegisterRequest = {
@@ -33,6 +32,11 @@ const register = async (req: Request, res: Response) => {
     const hashedPassword = await bcrypt.hash(request.password, 10);
     
     try {
+        if (await prisma.user.findUnique({ where: { email: request.email } })) {
+            res.status(400).json({ error: 'Email already exists' });
+            return;
+        }
+        
         const cart = await prisma.cart.create({ data: {} });
         const user = await prisma.user.create({
             data: {
@@ -62,7 +66,8 @@ const login = async (req: Request, res: Response) => {
     try {
         const user = await prisma.user.findUnique({ where: { 
             email: request.email,
-            emailVerified: true
+            emailVerified: true,
+            deleted: false
         } });
 
         
@@ -159,7 +164,7 @@ const verifyMail = async (req: Request, res: Response) => {
 const deleteUser = async (req: Request, res: Response) => {
     const user: User = req.body.user;
     try {
-        await prisma.user.delete({ where: { id: user.id } });
+        await prisma.user.update({ where: { id: user.id }, data: { deleted: true, deletedAt: new Date() } });
         res.status(204).json({ message: 'user deleted successfully' });
     } catch (error) {
         res.status(400).json({ error: 'User deletion failed' });

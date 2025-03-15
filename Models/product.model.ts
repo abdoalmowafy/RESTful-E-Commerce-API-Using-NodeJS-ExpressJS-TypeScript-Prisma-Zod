@@ -2,6 +2,11 @@ import { z } from 'zod';
 import { ProductSchema } from './generated/zod/index';
 
 export const ExtendedProductSchema = ProductSchema.extend({
+  id: z.undefined(),
+  views: z.undefined(),
+  updatedAt: z.undefined(),
+  createdAt: z.undefined(),
+  deleted: z.undefined(),
   name: z.string().min(1, "Product name cannot be empty"),
   priceCents: z.number().int().positive("Price must be a positive integer"),
   stock: z.number().int().nonnegative("Stock cannot be negative"),

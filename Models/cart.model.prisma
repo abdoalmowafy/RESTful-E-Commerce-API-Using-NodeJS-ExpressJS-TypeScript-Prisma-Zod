@@ -3,5 +3,6 @@ model Cart {
     cartItems   CartItem[]
     promoCodeId String?
     promoCode   PromoCode? @relation(fields: [promoCodeId], references: [id])
-    user        User?
+    userId      String?    @unique
+    user        User?      @relation(fields: [userId], references: [cartId])
 }

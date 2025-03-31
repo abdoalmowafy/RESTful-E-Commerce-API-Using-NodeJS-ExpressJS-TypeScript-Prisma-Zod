@@ -18,7 +18,7 @@ generator zod {
 
 datasource db {
   provider = "postgresql"
-  url      = env("ConnectionString")
+  url      = env("DATABASE_URI")
 }
 `;
 

@@ -10,7 +10,7 @@ model User {
     phoneVerified Boolean   @default(false)
     role          Role      @default(NOROLE)
     cartId        String    @unique
-    cart          Cart      @relation(fields: [cartId], references: [id])
+    cart          Cart?
     addresses     Address[]
     wishlist      Product[]
     orders        Order[]   @relation("OrderUser")

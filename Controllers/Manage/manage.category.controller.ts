@@ -2,51 +2,44 @@ import { Request, Response } from 'express';
 import { globalClient as prisma } from '../../prismaClient';
 import { Router } from 'express';
 import verifyToken from '../../Middlewares/verifyToken';
-import authorize from '../../Middlewares/authorize';
-import validate from '../../Middlewares/validate';
-import { ExtendedCategorySchema } from '../../Models/category.model';
+import validateZodSchema from '../../Middlewares/validateZodSchema';
 
 const manageCategoryController = Router();
 
-const newCategory = async(req: Request, res: Response) => {
-    const exists = await prisma.category.findFirst({ where: { name: req.body.name } });
-    if(exists) {
+const newCategory = async (req: Request, res: Response) => {
+    const categoryName = req.body.name.trim();
+    if (!categoryName || categoryName.length < 3) {
+        res.status(400).json({ error: 'Category name too short' });
+        return;
+    }
+
+    const exists = await prisma.category.findFirst({ where: { name: categoryName } });
+    if (exists) {
         res.status(400).json({ error: 'Category already exists' });
         return;
     }
 
-    const category = await prisma.category.create({ data: req.body });
+    const category = await prisma.category.create({ data: categoryName });
     res.status(201).json(category);
 }
-manageCategoryController.post('/', verifyToken, authorize(["ADMIN", "MODERATOR"]), validate(ExtendedCategorySchema), newCategory);
+manageCategoryController.post('/', verifyToken(["ADMIN", "MODERATOR"]), newCategory);
 
-const updateCategory = async(req: Request, res: Response) => {
-    const exists = await prisma.category.findFirst({ where: { name: req.body.name } });
-    if(exists) {
-        res.status(400).json({ error: 'Category already exists' });
-        return;
-    }
-
-    const category = await prisma.category.update({ where: { id: req.params.id }, data: req.body });
-    res.status(200).json(category);
-}
-manageCategoryController.put('/:id', verifyToken, authorize(["ADMIN", "MODERATOR"]), validate(ExtendedCategorySchema), updateCategory);
-
-const deleteCategory = async(req: Request, res: Response) => {
-    if(await prisma.product.findFirst({ where: { categoryId: req.params.id } })) {
+const deleteCategory = async (req: Request, res: Response) => {
+    const categoryId = req.params.id;
+    if (await prisma.product.findFirst({ where: { categoryId } })) {
         res.status(400).json({ error: 'Category has products, cannot delete' });
         return;
     }
 
     try {
-        await prisma.category.delete({ where: { id: req.params.id } });
+        await prisma.category.delete({ where: { id: categoryId } });
         res.status(204);
     }
-    catch(e) {
+    catch (e) {
         res.status(404).json({ error: 'Category not found' });
         return;
     }
 }
-manageCategoryController.delete('/:id', verifyToken, authorize(["ADMIN", "MODERATOR"]), deleteCategory);
+manageCategoryController.delete('/:id', verifyToken(["ADMIN", "MODERATOR"]), deleteCategory);
 
 export default manageCategoryController;

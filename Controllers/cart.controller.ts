@@ -5,13 +5,56 @@ import verifyToken from '../Middlewares/verifyToken';
 
 const cartController = Router();
 
+
+export const getValidatedCart = async (userId: string) => {
+    const cart = await prisma.cart.findUnique({
+        where: { userId: userId },
+        include: {
+            cartItems: { include: { product: true } },
+            promoCode: true
+        }
+    });
+
+    if (!cart) return null;
+
+    const validCartItems = cart.cartItems.filter(ci =>
+        ci.product &&
+        !ci.product.deleted &&
+        ci.product.stock >= ci.quantity
+    );
+
+    if (validCartItems.length < cart.cartItems.length) {
+        await prisma.cartItem.deleteMany({
+            where: {
+                productId: { notIn: validCartItems.map(ci => ci.productId) },
+                cartId: cart.id
+            }
+        });
+
+        cart.cartItems = validCartItems;
+    }
+
+    if (cart.promoCode && cart.promoCode.validUntil.getTime() < Date.now()) {
+        await prisma.cart.update({
+            where: { id: cart.id },
+            data: { promoCodeId: null }
+        });
+
+        cart.promoCode = null;
+        cart.promoCodeId = null;
+    }
+
+    return cart;
+};
+
+
 const indexCart = async (req: Request, res: Response) => {
     const userId = req.params.userId;
-    const cart = await prisma.cart.findUnique({ where: { userId: userId }, include: { cartItems: true, promoCode: true } });
+    const cart = await getValidatedCart(userId)
 
     res.status(200).json(cart);
 }
-cartController.get('/', verifyToken, indexCart);
+cartController.get('/', verifyToken(), indexCart);
 
 
 const modifyCartItems = async (req: Request, res: Response) => {
@@ -20,12 +63,12 @@ const modifyCartItems = async (req: Request, res: Response) => {
     const quantity = req.body.quantity;
     const cart = await prisma.cart.findUnique({ where: { userId: userId }, include: { cartItems: true } });
 
-    if(quantity === 0) {
+    if (quantity === 0) {
         try {
             const cartItem = await prisma.cartItem.deleteMany({
-            where: {
-                productId: productId,
-                cartId: cart!.id
+                where: {
+                    productId: productId,
+                    cartId: cart!.id
                 }
             });
 
@@ -54,10 +97,10 @@ const modifyCartItems = async (req: Request, res: Response) => {
             }
         });
     }
-    
+
     res.status(200).json(cartItem);
 }
-cartController.post('/', verifyToken, modifyCartItems);
+cartController.post('/', verifyToken(), modifyCartItems);
 
 
 const modifyPromoCode = async (req: Request, res: Response) => {
@@ -72,7 +115,7 @@ const modifyPromoCode = async (req: Request, res: Response) => {
             data: { promoCode: undefined }
         });
     }
-    else{
+    else {
         await prisma.cart.update({
             where: { id: cart!.id },
             data: { promoCodeId: promoCode.id }
@@ -81,4 +124,4 @@ const modifyPromoCode = async (req: Request, res: Response) => {
 
     res.status(200).json(promoCode);
 }
-cartController.post('/promoCode/:promoCode', verifyToken, modifyPromoCode);
+cartController.post('/promoCode/:promoCode', verifyToken(), modifyPromoCode);

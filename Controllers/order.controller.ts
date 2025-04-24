@@ -105,4 +105,29 @@ const createOrder = async (req: Request, res: Response) => {
 orderController.post("/", verifyToken(), validateZodSchema(orderRequestSchema), createOrder);
 
 
+const cancelOrder = async (req: Request, res: Response) => {
+    const userId = req.params.userId;
+    const orderId = req.params.orderId;
+    if (!orderId) {
+        res.status(400).json({ error: "Order id is missing" });
+        return;
+    }
+
+    const order = await prisma.order.findUnique({ where: { id: orderId, userId: userId } });
+    if (!order) {
+        res.status(400).json({ error: "Order not found" });
+        return;
+    }
+
+    if (order.status !== "PROCESSING" && order.status !== "ON_THE_WAY") {
+        res.status(400).json({ error: "Order cannot be deleted" });
+        return;
+    }
+
+    await prisma.order.update({ where: { id: orderId }, data: { deleted: true, deletedAt: new Date(), status: "CANCELLED" } });
+    res.status(200).json({ message: "Order deleted" });
+};
+orderController.delete("/:orderId", verifyToken(), cancelOrder);
+
+
 

@@ -50,7 +50,7 @@ async function registerOrder(order: ExtendedOrder, orderItems: Omit<OrderItem, "
     return response.id;
 }
 
-async function requestPaymentKey(userName: string, userEmail: string, userPhone: string, order: ExtendedOrder, orderItems: Omit<OrderItem, "orderId">[], address: ExtendedAddress, orderId: number, authToken: string): Promise<string> {
+async function requestPaymentKey(userName: string, userEmail: string, userPhone: string, order: ExtendedOrder, address: ExtendedAddress, orderId: number, authToken: string): Promise<string> {
     if (!order) throw new Error('Order is missing!');
 
     const billingData = {
@@ -102,7 +102,7 @@ const pay = async (userName: string, userEmail: string, userPhone: string, order
 
     const authToken = await authenticate();
     const orderId = await registerOrder(order, orderItems, authToken);
-    const paymentKey = await requestPaymentKey(userName, userEmail, userPhone, order, orderItems, deliveryAddress, orderId, authToken);
+    const paymentKey = await requestPaymentKey(userName, userEmail, userPhone, order, deliveryAddress, orderId, authToken);
 
     switch (order.paymentMethod) {
         case 'COD':

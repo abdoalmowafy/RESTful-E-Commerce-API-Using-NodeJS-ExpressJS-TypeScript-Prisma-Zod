@@ -23,7 +23,7 @@ const indexOrders = async (req: Request, res: Response) => {
 };
 orderController.get("/", verifyToken(), indexOrders);
 
-const validateAddress = async function (addressId: string, userId: string, deliveryNeeded: boolean) {
+const getValidatedAddress = async function (addressId: string, userId: string, deliveryNeeded: boolean) {
     const deliveryAddress = deliveryNeeded ?
         await prisma.address.findUnique({ where: { id: addressId, storeAddress: true, deleted: false } }) :
         await prisma.address.findUnique({ where: { id: addressId, userId: userId, deleted: false } });
@@ -39,22 +39,36 @@ const COD_FEE = 1000;
 const DELIVERY_FEE = 5000;
 const createOrder = async (req: Request, res: Response) => {
     const userId = req.params.userId;
-    const userName = req.params.userName;
-    const userPhone = req.params.userPhone;
-    const userEmail = req.params.userEmail;
-    const cart = await getValidatedCart(userId);
     const request: OrderRequest = req.body;
-    const deliveryAddress = await validateAddress(request.deliveryAddressId, userId, request.deliveryNeeded);
+    if (isValidCurrency(request.currency)) {
+        res.status(400).json({ error: 'Invalid currency' });
+        return;
+    }
+    if (request.paymentMethod === "MOBILEWALLET" && !request.identifier) {
+        res.status(400).json({ error: 'Mobile wallet identifier is required' });
+        return;
+    }
 
+    const cart = await getValidatedCart(userId);
+    if (!cart || cart.cartItems.length === 0) {
+        res.status(400).json({ error: 'Add items to cart first' });
+        return;
+    }
+
+    const deliveryAddress = await getValidatedAddress(request.deliveryAddressId, userId, request.deliveryNeeded);
     if (!deliveryAddress) {
         res.status(400).json({ error: 'Invalid address' });
         return;
     }
 
-    if (isValidCurrency(request.currency)) {
-        res.status(400).json({ error: 'Invalid currency' });
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || !user.emailVerified || !user.phoneVerified) {
+        res.status(400).json({ error: 'Invalid user data' });
         return;
     }
+    const userName = user.name;
+    const userEmail = user.email;
+    const userPhone = user.phone!;
 
     const orderItems = cart!.cartItems.map(ci => ({
         productId: ci.productId,

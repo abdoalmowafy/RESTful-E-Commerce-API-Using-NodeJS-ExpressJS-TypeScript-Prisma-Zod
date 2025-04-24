@@ -27,9 +27,6 @@ const verifyToken = (roles?: string[]) => async (req: Request, res: Response, ne
 
         req.params.userId = decoded.userId;
         req.params.userRole = decoded.userRole;
-        req.params.userEmail = decoded.userEmail;
-        req.params.userName = decoded.userName;
-        req.params.userPhone = decoded.userPhone;
 
         if (roles && roles.length && !roles.includes(req.params.userRole as RoleType)) {
             res.status(401).json({ message: 'Access Denied: Unauthorized' });

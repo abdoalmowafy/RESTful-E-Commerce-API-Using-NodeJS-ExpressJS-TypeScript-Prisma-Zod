@@ -123,6 +123,7 @@ userController.get('/account/info', verifyToken(), userInfo);
 const updateUser = async (req: Request, res: Response) => {
     const request: UserUpdateRequest = req.body;
     const userId = req.params.userId;
+    const userName = req.params.userName;
 
     try {
         const newUser = await prisma.user.update({
@@ -133,6 +134,7 @@ const updateUser = async (req: Request, res: Response) => {
                 gender: request.gender,
             }
         });
+
         res.status(200).json(newUser);
     } catch (error) {
         res.status(400).json({ error: 'User update failed' });

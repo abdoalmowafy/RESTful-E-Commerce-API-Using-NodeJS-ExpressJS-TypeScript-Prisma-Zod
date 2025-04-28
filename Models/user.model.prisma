@@ -20,7 +20,7 @@ model User {
     returnTransports Return[] @relation("ReturnTransporter")
 
     Review Review[]
-    search search[]
+    search Search[]
 
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt

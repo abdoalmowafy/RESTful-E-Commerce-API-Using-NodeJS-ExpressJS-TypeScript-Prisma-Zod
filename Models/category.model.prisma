@@ -2,5 +2,5 @@ model Category {
     id       String    @id @default(uuid())
     name     String
     products Product[]
-    search   search[]
+    search   Search[]
 }

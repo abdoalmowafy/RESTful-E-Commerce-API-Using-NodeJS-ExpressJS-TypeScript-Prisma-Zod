@@ -1,4 +1,4 @@
-model search {
+model Search {
     id         String   @id @default(uuid())
     keyWord    String
     userId     String?

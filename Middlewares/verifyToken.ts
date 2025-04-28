@@ -1,12 +1,11 @@
 import Jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
-import globalClient from '../prismaClient';
 import { RoleType } from "../Models/generated/zod";
 
 
 
 
-const verifyToken = (roles?: string[]) => async (req: Request, res: Response, next: NextFunction) => {
+const verifyToken = (roles?: RoleType[]) => async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(' ')[1];
 

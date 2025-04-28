@@ -1,5 +1,6 @@
 import cartController from "../Controllers/cart.controller";
 import manageCategoryController from "../Controllers/Manage/manage.category.controller";
+import manageOrderController from "../Controllers/Manage/manage.order.controller";
 import manageProductController from "../Controllers/Manage/manage.product.controller";
 import manageStoreAddressController from "../Controllers/Manage/manage.storeAddress.controller";
 import orderController from "../Controllers/order.controller";
@@ -11,6 +12,7 @@ import { Express } from "express";
 
 const MapControllers = (app: Express) => {
     app.use('/api/manage/category', manageCategoryController);
+    app.use('/api/manage/order', manageOrderController);
     app.use('/api/manage/product', manageProductController);
     app.use('/api/manage/storeAddress', manageStoreAddressController);
 

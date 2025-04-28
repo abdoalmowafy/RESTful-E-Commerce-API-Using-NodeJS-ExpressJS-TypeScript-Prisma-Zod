@@ -75,7 +75,7 @@ model Order {
     paymentMethod     PaymentMethod
     deliveryNeeded    Boolean
     status            OrderStatus
-    PaymobOrderId     String?
+    paymobOrderId     String?
     deliveryAddressId String
     deliveryAddress   Address       @relation(fields: [deliveryAddressId], references: [id])
 
@@ -92,6 +92,7 @@ enum OrderStatus {
     ON_THE_WAY
     DELIVERED
     CANCELLED
+    REJECTED
 }
 
 enum PaymentMethod {
@@ -154,7 +155,7 @@ model Return {
     reason          String
     status          ReturnStatus @default(PROCESSING)
     userId          String
-    User            User         @relation(name: "ReturnUser", fields: [userId], references: [id])
+    user            User         @relation(name: "ReturnUser", fields: [userId], references: [id])
     transporterId   String?
     transporter     User?        @relation(name: "ReturnTransporter", fields: [transporterId], references: [id])
     orderId         String
@@ -175,6 +176,7 @@ enum ReturnStatus {
     ON_THE_WAY
     RETURNED
     CANCELLED
+    REJECTED
 }
 
 model Review {

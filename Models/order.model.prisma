@@ -12,7 +12,7 @@ model Order {
     paymentMethod     PaymentMethod
     deliveryNeeded    Boolean
     status            OrderStatus
-    PaymobOrderId     String?
+    paymobOrderId     String?
     deliveryAddressId String
     deliveryAddress   Address       @relation(fields: [deliveryAddressId], references: [id])
 
@@ -29,6 +29,7 @@ enum OrderStatus {
     ON_THE_WAY
     DELIVERED
     CANCELLED
+    REJECTED
 }
 
 enum PaymentMethod {

@@ -23,7 +23,7 @@ const indexOrders = async (req: Request, res: Response) => {
 };
 orderController.get("/", verifyToken(), indexOrders);
 
-const getValidatedAddress = async function (addressId: string, userId: string, deliveryNeeded: boolean) {
+export const getValidatedAddress = async function (addressId: string, userId: string, deliveryNeeded: boolean) {
     const deliveryAddress = deliveryNeeded ?
         await prisma.address.findUnique({ where: { id: addressId, storeAddress: true, deleted: false } }) :
         await prisma.address.findUnique({ where: { id: addressId, userId: userId, deleted: false } });

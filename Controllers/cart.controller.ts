@@ -5,7 +5,6 @@ import verifyToken from '../Middlewares/verifyToken';
 
 const cartController = Router();
 
-
 export const getValidatedCart = async (userId: string) => {
     const cart = await prisma.cart.findUnique({
         where: { userId: userId },
@@ -125,3 +124,5 @@ const modifyPromoCode = async (req: Request, res: Response) => {
     res.status(200).json(promoCode);
 }
 cartController.post('/promoCode/:promoCode', verifyToken(), modifyPromoCode);
+
+export default cartController;

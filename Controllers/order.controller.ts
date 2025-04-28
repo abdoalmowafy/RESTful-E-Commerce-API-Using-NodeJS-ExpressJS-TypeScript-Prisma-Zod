@@ -144,4 +144,4 @@ const cancelOrder = async (req: Request, res: Response) => {
 orderController.delete("/:orderId", verifyToken(), cancelOrder);
 
 
-
+export default orderController;

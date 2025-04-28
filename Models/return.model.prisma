@@ -1,18 +1,28 @@
 model Return {
-    id            String    @id @default(uuid())
-    reason        String
-    status        String
-    userId        String
-    User          User      @relation(name: "ReturnUser", fields: [userId], references: [id])
-    transporterId String?
-    transporter   User?     @relation(name: "ReturnTransporter", fields: [transporterId], references: [id])
-    orderId       String
-    productId     String
-    orderItem     OrderItem @relation(name: "ReturnOrderItem", fields: [orderId, productId], references: [orderId, productId])
-    quantity      Int
+    id              String       @id @default(uuid())
+    quantity        Int
+    reason          String
+    status          ReturnStatus @default(PROCESSING)
+    userId          String
+    User            User         @relation(name: "ReturnUser", fields: [userId], references: [id])
+    transporterId   String?
+    transporter     User?        @relation(name: "ReturnTransporter", fields: [transporterId], references: [id])
+    orderId         String
+    productId       String
+    orderItem       OrderItem    @relation(name: "ReturnOrderItem", fields: [orderId, productId], references: [orderId, productId])
+    returnAddressId String
+    returnAddress   Address      @relation(fields: [returnAddressId], references: [id])
+    deliveryNeeded  Boolean
 
     createdAt DateTime  @default(now())
     updatedAt DateTime  @updatedAt
     deleted   Boolean   @default(false)
     deletedAt DateTime?
+}
+
+enum ReturnStatus {
+    PROCESSING
+    ON_THE_WAY
+    RETURNED
+    CANCELLED
 }

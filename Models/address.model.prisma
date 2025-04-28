@@ -1,5 +1,5 @@
 model Address {
-    id           String  @id @default(uuid())
+    id           String   @id @default(uuid())
     apartment    String
     floor        String
     building     String
@@ -9,9 +9,10 @@ model Address {
     country      String
     postalCode   String
     userId       String
-    user         User    @relation(fields: [userId], references: [id])
-    Order        Order[]
-    storeAddress Boolean @default(false)
+    user         User     @relation(fields: [userId], references: [id])
+    orders       Order[]
+    returns      Return[]
+    storeAddress Boolean  @default(false)
 
     createdAt DateTime  @default(now())
     updatedAt DateTime? @updatedAt

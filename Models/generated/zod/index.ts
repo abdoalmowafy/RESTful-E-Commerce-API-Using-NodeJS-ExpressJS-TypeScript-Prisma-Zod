@@ -20,7 +20,7 @@ export const CartItemScalarFieldEnumSchema = z.enum(['id','productId','quantity'
 
 export const CategoryScalarFieldEnumSchema = z.enum(['id','name']);
 
-export const OrderScalarFieldEnumSchema = z.enum(['id','userId','transporterId','promoCodeId','totalCents','currency','paymentMethod','deliveryNeeded','status','paymobOrderId','deliveryAddressId','createdAt','updatedAt','deliveredAt','deleted','deletedAt']);
+export const OrderScalarFieldEnumSchema = z.enum(['id','userId','transporterId','promoCodeId','totalCents','currency','paymentMethod','deliveryNeeded','status','paymobOrderId','deliveryAddressId','createdAt','updatedAt','deliveredAt']);
 
 export const OrderItemScalarFieldEnumSchema = z.enum(['orderId','productId','productPriceCents','productSalePercent','quantity','warrantyDays']);
 
@@ -28,7 +28,7 @@ export const ProductScalarFieldEnumSchema = z.enum(['id','name','sku','descripti
 
 export const PromoCodeScalarFieldEnumSchema = z.enum(['id','code','description','discountPercent','maxDiscountCents','validFrom','validUntil']);
 
-export const ReturnScalarFieldEnumSchema = z.enum(['id','quantity','reason','status','userId','transporterId','orderId','productId','returnAddressId','deliveryNeeded','createdAt','updatedAt','deleted','deletedAt']);
+export const ReturnScalarFieldEnumSchema = z.enum(['id','quantity','reason','status','userId','transporterId','orderId','productId','returnAddressId','deliveryNeeded','createdAt','updatedAt']);
 
 export const ReviewScalarFieldEnumSchema = z.enum(['id','productId','userId','rating','comment','createdAt','updatedAt','deleted','deletedAt']);
 
@@ -209,8 +209,6 @@ export const OrderSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
   deliveredAt: z.coerce.date().nullish(),
-  deleted: z.boolean(),
-  deletedAt: z.coerce.date().nullish(),
 })
 
 export type Order = z.infer<typeof OrderSchema>
@@ -359,8 +357,6 @@ export const ReturnSchema = z.object({
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
-  deleted: z.boolean(),
-  deletedAt: z.coerce.date().nullish(),
 })
 
 export type Return = z.infer<typeof ReturnSchema>
@@ -674,8 +670,6 @@ export const OrderSelectSchema: z.ZodType<Prisma.OrderSelect> = z.object({
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
   deliveredAt: z.boolean().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   transporter: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   orderItems: z.union([z.boolean(),z.lazy(() => OrderItemFindManyArgsSchema)]).optional(),
@@ -834,8 +828,6 @@ export const ReturnSelectSchema: z.ZodType<Prisma.ReturnSelect> = z.object({
   deliveryNeeded: z.boolean().optional(),
   createdAt: z.boolean().optional(),
   updatedAt: z.boolean().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.boolean().optional(),
   user: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   transporter: z.union([z.boolean(),z.lazy(() => UserArgsSchema)]).optional(),
   orderItem: z.union([z.boolean(),z.lazy(() => OrderItemArgsSchema)]).optional(),
@@ -1259,8 +1251,6 @@ export const OrderWhereInputSchema: z.ZodType<Prisma.OrderWhereInput> = z.object
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   deliveredAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  deletedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   transporter: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
   orderItems: z.lazy(() => OrderItemListRelationFilterSchema).optional(),
@@ -1283,8 +1273,6 @@ export const OrderOrderByWithRelationInputSchema: z.ZodType<Prisma.OrderOrderByW
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   deliveredAt: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   transporter: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemOrderByRelationAggregateInputSchema).optional(),
@@ -1313,8 +1301,6 @@ export const OrderWhereUniqueInputSchema: z.ZodType<Prisma.OrderWhereUniqueInput
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   deliveredAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  deletedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   transporter: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
   orderItems: z.lazy(() => OrderItemListRelationFilterSchema).optional(),
@@ -1337,8 +1323,6 @@ export const OrderOrderByWithAggregationInputSchema: z.ZodType<Prisma.OrderOrder
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
   deliveredAt: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   _count: z.lazy(() => OrderCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => OrderAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => OrderMaxOrderByAggregateInputSchema).optional(),
@@ -1364,8 +1348,6 @@ export const OrderScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.OrderSc
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   deliveredAt: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
-  deleted: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
-  deletedAt: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
 }).strict();
 
 export const OrderItemWhereInputSchema: z.ZodType<Prisma.OrderItemWhereInput> = z.object({
@@ -1641,8 +1623,6 @@ export const ReturnWhereInputSchema: z.ZodType<Prisma.ReturnWhereInput> = z.obje
   deliveryNeeded: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  deletedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   transporter: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
   orderItem: z.union([ z.lazy(() => OrderItemScalarRelationFilterSchema),z.lazy(() => OrderItemWhereInputSchema) ]).optional(),
@@ -1662,8 +1642,6 @@ export const ReturnOrderByWithRelationInputSchema: z.ZodType<Prisma.ReturnOrderB
   deliveryNeeded: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   user: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   transporter: z.lazy(() => UserOrderByWithRelationInputSchema).optional(),
   orderItem: z.lazy(() => OrderItemOrderByWithRelationInputSchema).optional(),
@@ -1689,8 +1667,6 @@ export const ReturnWhereUniqueInputSchema: z.ZodType<Prisma.ReturnWhereUniqueInp
   deliveryNeeded: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  deletedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   user: z.union([ z.lazy(() => UserScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional(),
   transporter: z.union([ z.lazy(() => UserNullableScalarRelationFilterSchema),z.lazy(() => UserWhereInputSchema) ]).optional().nullable(),
   orderItem: z.union([ z.lazy(() => OrderItemScalarRelationFilterSchema),z.lazy(() => OrderItemWhereInputSchema) ]).optional(),
@@ -1710,8 +1686,6 @@ export const ReturnOrderByWithAggregationInputSchema: z.ZodType<Prisma.ReturnOrd
   deliveryNeeded: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   _count: z.lazy(() => ReturnCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => ReturnAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => ReturnMaxOrderByAggregateInputSchema).optional(),
@@ -1735,8 +1709,6 @@ export const ReturnScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.Return
   deliveryNeeded: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeWithAggregatesFilterSchema),z.coerce.date() ]).optional(),
-  deleted: z.union([ z.lazy(() => BoolWithAggregatesFilterSchema),z.boolean() ]).optional(),
-  deletedAt: z.union([ z.lazy(() => DateTimeNullableWithAggregatesFilterSchema),z.coerce.date() ]).optional().nullable(),
 }).strict();
 
 export const ReviewWhereInputSchema: z.ZodType<Prisma.ReviewWhereInput> = z.object({
@@ -2313,8 +2285,6 @@ export const OrderCreateInputSchema: z.ZodType<Prisma.OrderCreateInput> = z.obje
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutOrdersInputSchema),
   transporter: z.lazy(() => UserCreateNestedOneWithoutOrderTranportsInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemCreateNestedManyWithoutOrderInputSchema).optional(),
@@ -2337,8 +2307,6 @@ export const OrderUncheckedCreateInputSchema: z.ZodType<Prisma.OrderUncheckedCre
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedCreateNestedManyWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -2353,8 +2321,6 @@ export const OrderUpdateInputSchema: z.ZodType<Prisma.OrderUpdateInput> = z.obje
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutOrdersNestedInputSchema).optional(),
   transporter: z.lazy(() => UserUpdateOneWithoutOrderTranportsNestedInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemUpdateManyWithoutOrderNestedInputSchema).optional(),
@@ -2377,8 +2343,6 @@ export const OrderUncheckedUpdateInputSchema: z.ZodType<Prisma.OrderUncheckedUpd
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedUpdateManyWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -2396,9 +2360,7 @@ export const OrderCreateManyInputSchema: z.ZodType<Prisma.OrderCreateManyInput> 
   deliveryAddressId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  deliveredAt: z.coerce.date().optional().nullable()
 }).strict();
 
 export const OrderUpdateManyMutationInputSchema: z.ZodType<Prisma.OrderUpdateManyMutationInput> = z.object({
@@ -2412,8 +2374,6 @@ export const OrderUpdateManyMutationInputSchema: z.ZodType<Prisma.OrderUpdateMan
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const OrderUncheckedUpdateManyInputSchema: z.ZodType<Prisma.OrderUncheckedUpdateManyInput> = z.object({
@@ -2431,8 +2391,6 @@ export const OrderUncheckedUpdateManyInputSchema: z.ZodType<Prisma.OrderUnchecke
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const OrderItemCreateInputSchema: z.ZodType<Prisma.OrderItemCreateInput> = z.object({
@@ -2713,8 +2671,6 @@ export const ReturnCreateInputSchema: z.ZodType<Prisma.ReturnCreateInput> = z.ob
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutReturnsInputSchema),
   transporter: z.lazy(() => UserCreateNestedOneWithoutReturnTransportsInputSchema).optional(),
   orderItem: z.lazy(() => OrderItemCreateNestedOneWithoutReturnsInputSchema),
@@ -2733,9 +2689,7 @@ export const ReturnUncheckedCreateInputSchema: z.ZodType<Prisma.ReturnUncheckedC
   returnAddressId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ReturnUpdateInputSchema: z.ZodType<Prisma.ReturnUpdateInput> = z.object({
@@ -2746,8 +2700,6 @@ export const ReturnUpdateInputSchema: z.ZodType<Prisma.ReturnUpdateInput> = z.ob
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutReturnsNestedInputSchema).optional(),
   transporter: z.lazy(() => UserUpdateOneWithoutReturnTransportsNestedInputSchema).optional(),
   orderItem: z.lazy(() => OrderItemUpdateOneRequiredWithoutReturnsNestedInputSchema).optional(),
@@ -2767,8 +2719,6 @@ export const ReturnUncheckedUpdateInputSchema: z.ZodType<Prisma.ReturnUncheckedU
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnCreateManyInputSchema: z.ZodType<Prisma.ReturnCreateManyInput> = z.object({
@@ -2783,9 +2733,7 @@ export const ReturnCreateManyInputSchema: z.ZodType<Prisma.ReturnCreateManyInput
   returnAddressId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ReturnUpdateManyMutationInputSchema: z.ZodType<Prisma.ReturnUpdateManyMutationInput> = z.object({
@@ -2796,8 +2744,6 @@ export const ReturnUpdateManyMutationInputSchema: z.ZodType<Prisma.ReturnUpdateM
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ReturnUncheckedUpdateManyInput> = z.object({
@@ -2813,8 +2759,6 @@ export const ReturnUncheckedUpdateManyInputSchema: z.ZodType<Prisma.ReturnUnchec
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReviewCreateInputSchema: z.ZodType<Prisma.ReviewCreateInput> = z.object({
@@ -3503,9 +3447,7 @@ export const OrderCountOrderByAggregateInputSchema: z.ZodType<Prisma.OrderCountO
   deliveryAddressId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deliveredAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.lazy(() => SortOrderSchema).optional()
+  deliveredAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const OrderAvgOrderByAggregateInputSchema: z.ZodType<Prisma.OrderAvgOrderByAggregateInput> = z.object({
@@ -3526,9 +3468,7 @@ export const OrderMaxOrderByAggregateInputSchema: z.ZodType<Prisma.OrderMaxOrder
   deliveryAddressId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deliveredAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.lazy(() => SortOrderSchema).optional()
+  deliveredAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const OrderMinOrderByAggregateInputSchema: z.ZodType<Prisma.OrderMinOrderByAggregateInput> = z.object({
@@ -3545,9 +3485,7 @@ export const OrderMinOrderByAggregateInputSchema: z.ZodType<Prisma.OrderMinOrder
   deliveryAddressId: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
   updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deliveredAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.lazy(() => SortOrderSchema).optional()
+  deliveredAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const OrderSumOrderByAggregateInputSchema: z.ZodType<Prisma.OrderSumOrderByAggregateInput> = z.object({
@@ -3788,9 +3726,7 @@ export const ReturnCountOrderByAggregateInputSchema: z.ZodType<Prisma.ReturnCoun
   returnAddressId: z.lazy(() => SortOrderSchema).optional(),
   deliveryNeeded: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
-  updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.lazy(() => SortOrderSchema).optional()
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ReturnAvgOrderByAggregateInputSchema: z.ZodType<Prisma.ReturnAvgOrderByAggregateInput> = z.object({
@@ -3809,9 +3745,7 @@ export const ReturnMaxOrderByAggregateInputSchema: z.ZodType<Prisma.ReturnMaxOrd
   returnAddressId: z.lazy(() => SortOrderSchema).optional(),
   deliveryNeeded: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
-  updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.lazy(() => SortOrderSchema).optional()
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ReturnMinOrderByAggregateInputSchema: z.ZodType<Prisma.ReturnMinOrderByAggregateInput> = z.object({
@@ -3826,9 +3760,7 @@ export const ReturnMinOrderByAggregateInputSchema: z.ZodType<Prisma.ReturnMinOrd
   returnAddressId: z.lazy(() => SortOrderSchema).optional(),
   deliveryNeeded: z.lazy(() => SortOrderSchema).optional(),
   createdAt: z.lazy(() => SortOrderSchema).optional(),
-  updatedAt: z.lazy(() => SortOrderSchema).optional(),
-  deleted: z.lazy(() => SortOrderSchema).optional(),
-  deletedAt: z.lazy(() => SortOrderSchema).optional()
+  updatedAt: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const ReturnSumOrderByAggregateInputSchema: z.ZodType<Prisma.ReturnSumOrderByAggregateInput> = z.object({
@@ -5586,8 +5518,6 @@ export const OrderCreateWithoutDeliveryAddressInputSchema: z.ZodType<Prisma.Orde
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutOrdersInputSchema),
   transporter: z.lazy(() => UserCreateNestedOneWithoutOrderTranportsInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemCreateNestedManyWithoutOrderInputSchema).optional(),
@@ -5608,8 +5538,6 @@ export const OrderUncheckedCreateWithoutDeliveryAddressInputSchema: z.ZodType<Pr
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedCreateNestedManyWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -5631,8 +5559,6 @@ export const ReturnCreateWithoutReturnAddressInputSchema: z.ZodType<Prisma.Retur
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutReturnsInputSchema),
   transporter: z.lazy(() => UserCreateNestedOneWithoutReturnTransportsInputSchema).optional(),
   orderItem: z.lazy(() => OrderItemCreateNestedOneWithoutReturnsInputSchema)
@@ -5649,9 +5575,7 @@ export const ReturnUncheckedCreateWithoutReturnAddressInputSchema: z.ZodType<Pri
   productId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ReturnCreateOrConnectWithoutReturnAddressInputSchema: z.ZodType<Prisma.ReturnCreateOrConnectWithoutReturnAddressInput> = z.object({
@@ -5761,8 +5685,6 @@ export const OrderScalarWhereInputSchema: z.ZodType<Prisma.OrderScalarWhereInput
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   deliveredAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  deletedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
 }).strict();
 
 export const ReturnUpsertWithWhereUniqueWithoutReturnAddressInputSchema: z.ZodType<Prisma.ReturnUpsertWithWhereUniqueWithoutReturnAddressInput> = z.object({
@@ -5797,8 +5719,6 @@ export const ReturnScalarWhereInputSchema: z.ZodType<Prisma.ReturnScalarWhereInp
   deliveryNeeded: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
   createdAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   updatedAt: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  deleted: z.union([ z.lazy(() => BoolFilterSchema),z.boolean() ]).optional(),
-  deletedAt: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
 }).strict();
 
 export const CartItemCreateWithoutCartInputSchema: z.ZodType<Prisma.CartItemCreateWithoutCartInput> = z.object({
@@ -6751,8 +6671,6 @@ export const OrderCreateWithoutOrderItemsInputSchema: z.ZodType<Prisma.OrderCrea
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutOrdersInputSchema),
   transporter: z.lazy(() => UserCreateNestedOneWithoutOrderTranportsInputSchema).optional(),
   promoCode: z.lazy(() => PromoCodeCreateNestedOneWithoutOrderInputSchema).optional(),
@@ -6773,9 +6691,7 @@ export const OrderUncheckedCreateWithoutOrderItemsInputSchema: z.ZodType<Prisma.
   deliveryAddressId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  deliveredAt: z.coerce.date().optional().nullable()
 }).strict();
 
 export const OrderCreateOrConnectWithoutOrderItemsInputSchema: z.ZodType<Prisma.OrderCreateOrConnectWithoutOrderItemsInput> = z.object({
@@ -6834,8 +6750,6 @@ export const ReturnCreateWithoutOrderItemInputSchema: z.ZodType<Prisma.ReturnCre
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutReturnsInputSchema),
   transporter: z.lazy(() => UserCreateNestedOneWithoutReturnTransportsInputSchema).optional(),
   returnAddress: z.lazy(() => AddressCreateNestedOneWithoutReturnsInputSchema)
@@ -6851,9 +6765,7 @@ export const ReturnUncheckedCreateWithoutOrderItemInputSchema: z.ZodType<Prisma.
   returnAddressId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ReturnCreateOrConnectWithoutOrderItemInputSchema: z.ZodType<Prisma.ReturnCreateOrConnectWithoutOrderItemInput> = z.object({
@@ -6888,8 +6800,6 @@ export const OrderUpdateWithoutOrderItemsInputSchema: z.ZodType<Prisma.OrderUpda
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutOrdersNestedInputSchema).optional(),
   transporter: z.lazy(() => UserUpdateOneWithoutOrderTranportsNestedInputSchema).optional(),
   promoCode: z.lazy(() => PromoCodeUpdateOneWithoutOrderNestedInputSchema).optional(),
@@ -6911,8 +6821,6 @@ export const OrderUncheckedUpdateWithoutOrderItemsInputSchema: z.ZodType<Prisma.
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ProductUpsertWithoutOrderItemInputSchema: z.ZodType<Prisma.ProductUpsertWithoutOrderItemInput> = z.object({
@@ -7292,8 +7200,6 @@ export const OrderCreateWithoutPromoCodeInputSchema: z.ZodType<Prisma.OrderCreat
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutOrdersInputSchema),
   transporter: z.lazy(() => UserCreateNestedOneWithoutOrderTranportsInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemCreateNestedManyWithoutOrderInputSchema).optional(),
@@ -7314,8 +7220,6 @@ export const OrderUncheckedCreateWithoutPromoCodeInputSchema: z.ZodType<Prisma.O
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedCreateNestedManyWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -8245,8 +8149,6 @@ export const OrderCreateWithoutUserInputSchema: z.ZodType<Prisma.OrderCreateWith
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   transporter: z.lazy(() => UserCreateNestedOneWithoutOrderTranportsInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemCreateNestedManyWithoutOrderInputSchema).optional(),
   promoCode: z.lazy(() => PromoCodeCreateNestedOneWithoutOrderInputSchema).optional(),
@@ -8267,8 +8169,6 @@ export const OrderUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.OrderU
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedCreateNestedManyWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -8290,8 +8190,6 @@ export const ReturnCreateWithoutUserInputSchema: z.ZodType<Prisma.ReturnCreateWi
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   transporter: z.lazy(() => UserCreateNestedOneWithoutReturnTransportsInputSchema).optional(),
   orderItem: z.lazy(() => OrderItemCreateNestedOneWithoutReturnsInputSchema),
   returnAddress: z.lazy(() => AddressCreateNestedOneWithoutReturnsInputSchema)
@@ -8308,9 +8206,7 @@ export const ReturnUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.Retur
   returnAddressId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ReturnCreateOrConnectWithoutUserInputSchema: z.ZodType<Prisma.ReturnCreateOrConnectWithoutUserInput> = z.object({
@@ -8334,8 +8230,6 @@ export const OrderCreateWithoutTransporterInputSchema: z.ZodType<Prisma.OrderCre
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutOrdersInputSchema),
   orderItems: z.lazy(() => OrderItemCreateNestedManyWithoutOrderInputSchema).optional(),
   promoCode: z.lazy(() => PromoCodeCreateNestedOneWithoutOrderInputSchema).optional(),
@@ -8356,8 +8250,6 @@ export const OrderUncheckedCreateWithoutTransporterInputSchema: z.ZodType<Prisma
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
   deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedCreateNestedManyWithoutOrderInputSchema).optional()
 }).strict();
 
@@ -8379,8 +8271,6 @@ export const ReturnCreateWithoutTransporterInputSchema: z.ZodType<Prisma.ReturnC
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable(),
   user: z.lazy(() => UserCreateNestedOneWithoutReturnsInputSchema),
   orderItem: z.lazy(() => OrderItemCreateNestedOneWithoutReturnsInputSchema),
   returnAddress: z.lazy(() => AddressCreateNestedOneWithoutReturnsInputSchema)
@@ -8397,9 +8287,7 @@ export const ReturnUncheckedCreateWithoutTransporterInputSchema: z.ZodType<Prism
   returnAddressId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ReturnCreateOrConnectWithoutTransporterInputSchema: z.ZodType<Prisma.ReturnCreateOrConnectWithoutTransporterInput> = z.object({
@@ -8651,9 +8539,7 @@ export const OrderCreateManyDeliveryAddressInputSchema: z.ZodType<Prisma.OrderCr
   paymobOrderId: z.string().optional().nullable(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  deliveredAt: z.coerce.date().optional().nullable()
 }).strict();
 
 export const ReturnCreateManyReturnAddressInputSchema: z.ZodType<Prisma.ReturnCreateManyReturnAddressInput> = z.object({
@@ -8667,9 +8553,7 @@ export const ReturnCreateManyReturnAddressInputSchema: z.ZodType<Prisma.ReturnCr
   productId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const OrderUpdateWithoutDeliveryAddressInputSchema: z.ZodType<Prisma.OrderUpdateWithoutDeliveryAddressInput> = z.object({
@@ -8683,8 +8567,6 @@ export const OrderUpdateWithoutDeliveryAddressInputSchema: z.ZodType<Prisma.Orde
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutOrdersNestedInputSchema).optional(),
   transporter: z.lazy(() => UserUpdateOneWithoutOrderTranportsNestedInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemUpdateManyWithoutOrderNestedInputSchema).optional(),
@@ -8705,8 +8587,6 @@ export const OrderUncheckedUpdateWithoutDeliveryAddressInputSchema: z.ZodType<Pr
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedUpdateManyWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -8724,8 +8604,6 @@ export const OrderUncheckedUpdateManyWithoutDeliveryAddressInputSchema: z.ZodTyp
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnUpdateWithoutReturnAddressInputSchema: z.ZodType<Prisma.ReturnUpdateWithoutReturnAddressInput> = z.object({
@@ -8736,8 +8614,6 @@ export const ReturnUpdateWithoutReturnAddressInputSchema: z.ZodType<Prisma.Retur
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutReturnsNestedInputSchema).optional(),
   transporter: z.lazy(() => UserUpdateOneWithoutReturnTransportsNestedInputSchema).optional(),
   orderItem: z.lazy(() => OrderItemUpdateOneRequiredWithoutReturnsNestedInputSchema).optional()
@@ -8755,8 +8631,6 @@ export const ReturnUncheckedUpdateWithoutReturnAddressInputSchema: z.ZodType<Pri
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnUncheckedUpdateManyWithoutReturnAddressInputSchema: z.ZodType<Prisma.ReturnUncheckedUpdateManyWithoutReturnAddressInput> = z.object({
@@ -8771,8 +8645,6 @@ export const ReturnUncheckedUpdateManyWithoutReturnAddressInputSchema: z.ZodType
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const CartItemCreateManyCartInputSchema: z.ZodType<Prisma.CartItemCreateManyCartInput> = z.object({
@@ -8935,9 +8807,7 @@ export const ReturnCreateManyOrderItemInputSchema: z.ZodType<Prisma.ReturnCreate
   returnAddressId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ReturnUpdateWithoutOrderItemInputSchema: z.ZodType<Prisma.ReturnUpdateWithoutOrderItemInput> = z.object({
@@ -8948,8 +8818,6 @@ export const ReturnUpdateWithoutOrderItemInputSchema: z.ZodType<Prisma.ReturnUpd
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutReturnsNestedInputSchema).optional(),
   transporter: z.lazy(() => UserUpdateOneWithoutReturnTransportsNestedInputSchema).optional(),
   returnAddress: z.lazy(() => AddressUpdateOneRequiredWithoutReturnsNestedInputSchema).optional()
@@ -8966,8 +8834,6 @@ export const ReturnUncheckedUpdateWithoutOrderItemInputSchema: z.ZodType<Prisma.
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnUncheckedUpdateManyWithoutOrderItemInputSchema: z.ZodType<Prisma.ReturnUncheckedUpdateManyWithoutOrderItemInput> = z.object({
@@ -8981,8 +8847,6 @@ export const ReturnUncheckedUpdateManyWithoutOrderItemInputSchema: z.ZodType<Pri
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReviewCreateManyProductInputSchema: z.ZodType<Prisma.ReviewCreateManyProductInput> = z.object({
@@ -9175,9 +9039,7 @@ export const OrderCreateManyPromoCodeInputSchema: z.ZodType<Prisma.OrderCreateMa
   deliveryAddressId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  deliveredAt: z.coerce.date().optional().nullable()
 }).strict();
 
 export const CartUpdateWithoutPromoCodeInputSchema: z.ZodType<Prisma.CartUpdateWithoutPromoCodeInput> = z.object({
@@ -9208,8 +9070,6 @@ export const OrderUpdateWithoutPromoCodeInputSchema: z.ZodType<Prisma.OrderUpdat
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutOrdersNestedInputSchema).optional(),
   transporter: z.lazy(() => UserUpdateOneWithoutOrderTranportsNestedInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemUpdateManyWithoutOrderNestedInputSchema).optional(),
@@ -9230,8 +9090,6 @@ export const OrderUncheckedUpdateWithoutPromoCodeInputSchema: z.ZodType<Prisma.O
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedUpdateManyWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -9249,8 +9107,6 @@ export const OrderUncheckedUpdateManyWithoutPromoCodeInputSchema: z.ZodType<Pris
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const AddressCreateManyUserInputSchema: z.ZodType<Prisma.AddressCreateManyUserInput> = z.object({
@@ -9283,9 +9139,7 @@ export const OrderCreateManyUserInputSchema: z.ZodType<Prisma.OrderCreateManyUse
   deliveryAddressId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  deliveredAt: z.coerce.date().optional().nullable()
 }).strict();
 
 export const ReturnCreateManyUserInputSchema: z.ZodType<Prisma.ReturnCreateManyUserInput> = z.object({
@@ -9299,9 +9153,7 @@ export const ReturnCreateManyUserInputSchema: z.ZodType<Prisma.ReturnCreateManyU
   returnAddressId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const OrderCreateManyTransporterInputSchema: z.ZodType<Prisma.OrderCreateManyTransporterInput> = z.object({
@@ -9317,9 +9169,7 @@ export const OrderCreateManyTransporterInputSchema: z.ZodType<Prisma.OrderCreate
   deliveryAddressId: z.string(),
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
-  deliveredAt: z.coerce.date().optional().nullable(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  deliveredAt: z.coerce.date().optional().nullable()
 }).strict();
 
 export const ReturnCreateManyTransporterInputSchema: z.ZodType<Prisma.ReturnCreateManyTransporterInput> = z.object({
@@ -9333,9 +9183,7 @@ export const ReturnCreateManyTransporterInputSchema: z.ZodType<Prisma.ReturnCrea
   returnAddressId: z.string(),
   deliveryNeeded: z.boolean(),
   createdAt: z.coerce.date().optional(),
-  updatedAt: z.coerce.date().optional(),
-  deleted: z.boolean().optional(),
-  deletedAt: z.coerce.date().optional().nullable()
+  updatedAt: z.coerce.date().optional()
 }).strict();
 
 export const ReviewCreateManyUserInputSchema: z.ZodType<Prisma.ReviewCreateManyUserInput> = z.object({
@@ -9475,8 +9323,6 @@ export const OrderUpdateWithoutUserInputSchema: z.ZodType<Prisma.OrderUpdateWith
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   transporter: z.lazy(() => UserUpdateOneWithoutOrderTranportsNestedInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemUpdateManyWithoutOrderNestedInputSchema).optional(),
   promoCode: z.lazy(() => PromoCodeUpdateOneWithoutOrderNestedInputSchema).optional(),
@@ -9497,8 +9343,6 @@ export const OrderUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.OrderU
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedUpdateManyWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -9516,8 +9360,6 @@ export const OrderUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.Or
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnUpdateWithoutUserInputSchema: z.ZodType<Prisma.ReturnUpdateWithoutUserInput> = z.object({
@@ -9528,8 +9370,6 @@ export const ReturnUpdateWithoutUserInputSchema: z.ZodType<Prisma.ReturnUpdateWi
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   transporter: z.lazy(() => UserUpdateOneWithoutReturnTransportsNestedInputSchema).optional(),
   orderItem: z.lazy(() => OrderItemUpdateOneRequiredWithoutReturnsNestedInputSchema).optional(),
   returnAddress: z.lazy(() => AddressUpdateOneRequiredWithoutReturnsNestedInputSchema).optional()
@@ -9547,8 +9387,6 @@ export const ReturnUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.Retur
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.ReturnUncheckedUpdateManyWithoutUserInput> = z.object({
@@ -9563,8 +9401,6 @@ export const ReturnUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.R
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const OrderUpdateWithoutTransporterInputSchema: z.ZodType<Prisma.OrderUpdateWithoutTransporterInput> = z.object({
@@ -9578,8 +9414,6 @@ export const OrderUpdateWithoutTransporterInputSchema: z.ZodType<Prisma.OrderUpd
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutOrdersNestedInputSchema).optional(),
   orderItems: z.lazy(() => OrderItemUpdateManyWithoutOrderNestedInputSchema).optional(),
   promoCode: z.lazy(() => PromoCodeUpdateOneWithoutOrderNestedInputSchema).optional(),
@@ -9600,8 +9434,6 @@ export const OrderUncheckedUpdateWithoutTransporterInputSchema: z.ZodType<Prisma
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   orderItems: z.lazy(() => OrderItemUncheckedUpdateManyWithoutOrderNestedInputSchema).optional()
 }).strict();
 
@@ -9619,8 +9451,6 @@ export const OrderUncheckedUpdateManyWithoutTransporterInputSchema: z.ZodType<Pr
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   deliveredAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnUpdateWithoutTransporterInputSchema: z.ZodType<Prisma.ReturnUpdateWithoutTransporterInput> = z.object({
@@ -9631,8 +9461,6 @@ export const ReturnUpdateWithoutTransporterInputSchema: z.ZodType<Prisma.ReturnU
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   user: z.lazy(() => UserUpdateOneRequiredWithoutReturnsNestedInputSchema).optional(),
   orderItem: z.lazy(() => OrderItemUpdateOneRequiredWithoutReturnsNestedInputSchema).optional(),
   returnAddress: z.lazy(() => AddressUpdateOneRequiredWithoutReturnsNestedInputSchema).optional()
@@ -9650,8 +9478,6 @@ export const ReturnUncheckedUpdateWithoutTransporterInputSchema: z.ZodType<Prism
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReturnUncheckedUpdateManyWithoutTransporterInputSchema: z.ZodType<Prisma.ReturnUncheckedUpdateManyWithoutTransporterInput> = z.object({
@@ -9666,8 +9492,6 @@ export const ReturnUncheckedUpdateManyWithoutTransporterInputSchema: z.ZodType<P
   deliveryNeeded: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   createdAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   updatedAt: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  deleted: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
-  deletedAt: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const ReviewUpdateWithoutUserInputSchema: z.ZodType<Prisma.ReviewUpdateWithoutUserInput> = z.object({

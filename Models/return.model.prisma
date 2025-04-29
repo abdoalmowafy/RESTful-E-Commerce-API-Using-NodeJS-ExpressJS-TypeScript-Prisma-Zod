@@ -14,10 +14,8 @@ model Return {
     returnAddress   Address      @relation(fields: [returnAddressId], references: [id])
     deliveryNeeded  Boolean
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    deleted   Boolean   @default(false)
-    deletedAt DateTime?
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 enum ReturnStatus {

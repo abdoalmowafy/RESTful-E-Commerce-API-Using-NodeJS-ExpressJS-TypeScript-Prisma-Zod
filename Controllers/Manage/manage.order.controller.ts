@@ -1,6 +1,5 @@
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 import { globalClient as prisma } from "../../prismaClient";
-import { Request, Response } from "express";
 import verifyToken from "../../Middlewares/verifyToken";
 import { z } from "zod";
 import validateZodSchema from "../../Middlewares/validateZodSchema";
@@ -11,26 +10,23 @@ const orderFilterSchema = ExtendedOrderSchema.pick({ userId: true, paymentMethod
 type OrderFilter = z.infer<typeof orderFilterSchema>;
 
 const getOrders = async (req: Request, res: Response) => {
+    const requesterId = req.params.userId;
+    const userRole = req.params.userRole;
     const request: OrderFilter = req.body;
     const orders = prisma.order.findMany({
         where: {
+            ...(userRole === "TRANSPORTER" && { transporterId: requesterId }),
             ...(request.userId && { userId: request.userId }),
             ...(request.paymentMethod && { paymentMethod: request.paymentMethod }),
             ...(request.status && { status: request.status }),
-            ...(request.deliveryNeeded && { deliveryNeeded: request.deliveryNeeded }),
+            ...(request.deliveryNeeded !== undefined && { deliveryNeeded: request.deliveryNeeded }),
         },
-        include: { orderItems: true, deliveryAddress: true }
+        include: { orderItems: { include: { product: true } }, deliveryAddress: true, user: true },
     });
 
     res.json(orders);
 };
-manageOrderController.get('/orders', verifyToken(["ADMIN", "MODERATOR"]), validateZodSchema(orderFilterSchema), getOrders);
-
-const getTransporters = async (req: Request, res: Response) => {
-    const transporters = await prisma.user.findMany({ where: { role: "TRANSPORTER", deleted: false } });
-    res.status(200).json(transporters);
-};
-manageOrderController.get('/transporters', verifyToken(["ADMIN", "MODERATOR"]), getTransporters);
+manageOrderController.get('/', verifyToken(["ADMIN", "MODERATOR", "TRANSPORTER"]), validateZodSchema(orderFilterSchema), getOrders);
 
 const setTransporterToOrder = async (req: Request, res: Response) => {
     const orderId = req.params.orderId;
@@ -42,20 +38,20 @@ const setTransporterToOrder = async (req: Request, res: Response) => {
     }
     const order = await prisma.order.findUnique({ where: { id: orderId, status: "PROCESSING" } });
     if (!order) {
-        res.status(404).json({ error: "Order not found" });
+        res.status(400).json({ error: "Invalid order" });
         return;
     }
 
     const transporter = await prisma.user.findUnique({ where: { id: transporterId, role: "TRANSPORTER", deleted: false } });
     if (!transporter) {
-        res.status(404).json({ error: "Transporter not found" });
+        res.status(400).json({ error: "Invalid transporter" });
         return;
     }
 
     const updatedOrder = await prisma.order.update({ where: { id: orderId }, data: { transporterId: transporterId } });
     res.status(200).json(updatedOrder);
 };
-manageOrderController.put('/orders/:orderId', verifyToken(["ADMIN", "MODERATOR"]), setTransporterToOrder);
+manageOrderController.put('/:orderId', verifyToken(["ADMIN", "MODERATOR"]), setTransporterToOrder);
 
 const rejectOrder = async (req: Request, res: Response) => {
     const orderId = req.params.orderId;
@@ -66,14 +62,14 @@ const rejectOrder = async (req: Request, res: Response) => {
 
     const order = await prisma.order.findUnique({ where: { id: orderId, status: "PROCESSING" } });
     if (!order) {
-        res.status(404).json({ error: "Order not found" });
+        res.status(400).json({ error: "Invalid order" });
         return;
     }
 
-    const updatedOrder = await prisma.order.update({ where: { id: orderId }, data: { status: "REJECTED", deleted: true, deletedAt: new Date() } });
+    const updatedOrder = await prisma.order.update({ where: { id: orderId }, data: { status: "REJECTED" } });
     res.status(200).json(updatedOrder);
 }
-manageOrderController.delete('/orders/:orderId', verifyToken(["ADMIN", "MODERATOR"]), rejectOrder);
+manageOrderController.delete('/:orderId', verifyToken(["ADMIN", "MODERATOR"]), rejectOrder);
 
 
 export default manageOrderController;

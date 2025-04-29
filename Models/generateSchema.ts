@@ -5,8 +5,7 @@ const prismaFolder = __dirname;
 const schemaPath = path.join(__dirname, 'schema.prisma');
 
 // Load the base Prisma schema file (if you have a generator/config file)
-let mergedSchema = `
-generator client {
+let mergedSchema = `generator client {
     provider = "prisma-client-js"
 }
 
@@ -26,8 +25,8 @@ datasource db {
 const modelFiles = fs.readdirSync(prismaFolder).filter(file => file.endsWith('.model.prisma'));
 
 modelFiles.forEach(file => {
-  const content = fs.readFileSync(path.join(prismaFolder, file), 'utf-8');
-  mergedSchema += `\n${content}`;
+    const content = fs.readFileSync(path.join(prismaFolder, file), 'utf-8');
+    mergedSchema += `\n${content}`;
 });
 
 // Write the merged schema to schema.prisma

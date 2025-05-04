@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { globalClient as prisma } from '../../prismaClient';
 import { Router } from 'express';
 import verifyToken from '../../Middlewares/verifyToken';
-import validateZodSchema from '../../Middlewares/validateZodSchema';
 
 const manageCategoryController = Router();
 
@@ -19,7 +18,7 @@ const newCategory = async (req: Request, res: Response) => {
         return;
     }
 
-    const category = await prisma.category.create({ data: categoryName });
+    const category = await prisma.category.create({ data: { name: categoryName } });
     res.status(201).json(category);
 }
 manageCategoryController.post('/', verifyToken(["ADMIN", "MODERATOR"]), newCategory);

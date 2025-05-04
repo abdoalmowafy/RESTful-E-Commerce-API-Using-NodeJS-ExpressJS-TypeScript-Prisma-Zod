@@ -10,7 +10,7 @@ import validateZodSchema from '../Middlewares/validateZodSchema';
 
 const userController = Router();
 
-const userRegisterSchema = ExtendedUserSchema.pick({ email: true, name: true, dob: true, gender: true }).extend({ password: z.string().length(8) });
+const userRegisterSchema = ExtendedUserSchema.pick({ email: true, name: true, dob: true, gender: true }).extend({ password: z.string().min(8) });
 type UserRegisterRequest = z.infer<typeof userRegisterSchema>;
 
 const userLoginSchema = userRegisterSchema.pick({ email: true, password: true });
@@ -71,7 +71,7 @@ const login = async (req: Request, res: Response) => {
                 throw new Error('Internal Server Error: API key not configured');
             }
 
-            const token = jwt.sign({ userId: user.id, userRole: user.role, userEmail: user.email, userName: user.name, userPhone: user.phone }, JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ userId: user.id, userRole: user.role }, JWT_SECRET, { expiresIn: '1h' });
             res.status(200).json({ token });
         } else {
             res.status(401).json({ error: 'Invalid email or password' });
@@ -123,7 +123,6 @@ userController.get('/account/info', verifyToken(), userInfo);
 const updateUser = async (req: Request, res: Response) => {
     const request: UserUpdateRequest = req.body;
     const userId = req.params.userId;
-    const userName = req.params.userName;
 
     try {
         const newUser = await prisma.user.update({

@@ -50,7 +50,7 @@ const expandProduct = async (req: Request, res: Response) => {
 
     res.status(200).json({ product: product });
 }
-storeController.get('/:id', expandProduct);
+storeController.get('/product/:id', expandProduct);
 
 const indexWishlist = async (req: Request, res: Response) => {
     const userId = req.params.userId;
@@ -67,51 +67,51 @@ storeController.get('/wishlist', verifyToken(), indexWishlist);
 const addWishlist = async (req: Request, res: Response) => {
     const userId = req.params.userId;
     const productId = req.params.productId;
-    if (!productId) {
+    if (!productId || productId === ":productId") {
         res.status(400).json({ error: "Product id is required" });
         return;
     }
 
-    const product = prisma.product.findFirst({ where: { id: productId, deleted: false } });
+    const product = await prisma.product.findFirst({ where: { id: productId, deleted: false } });
     if (!product) {
         res.status(404).json({ error: "product not found" });
         return;
     }
 
     try {
-        await prisma.user.update({ where: { id: userId }, data: { wishlist: { connect: { id: productId } } } });
+        await prisma.user.update({ where: { id: userId, deleted: false }, data: { wishlist: { connect: { id: productId } } } });
         res.status(200).json({ message: "product added to wishlist" });
     }
     catch (e) {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-storeController.post('/wishlist:id', verifyToken(), addWishlist);
+storeController.post('/wishlist/:productId', verifyToken(), addWishlist);
 
 
 const removeWishlist = async (req: Request, res: Response) => {
     const userId = req.params.userId;
     const productId = req.params.productId;
-    if (!productId) {
+    if (!productId || productId === ":productId") {
         res.status(400).json({ error: "Product id is required" });
         return;
     }
 
-    const product = prisma.product.findFirst({ where: { id: productId, deleted: false } });
+    const product = await prisma.product.findFirst({ where: { id: productId, deleted: false } });
     if (!product) {
         res.status(404).json({ error: "product not found" });
         return;
     }
 
     try {
-        await prisma.user.update({ where: { id: userId }, data: { wishlist: { disconnect: { id: productId } } } });
+        await prisma.user.update({ where: { id: userId, deleted: false }, data: { wishlist: { disconnect: { id: productId } } } });
         res.status(200).json({ message: "product removed from wishlist" });
     }
     catch (e) {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-storeController.delete('/wishlist:id', verifyToken(), removeWishlist);
+storeController.delete('/wishlist/:productId', verifyToken(), removeWishlist);
 
 
 export default storeController;

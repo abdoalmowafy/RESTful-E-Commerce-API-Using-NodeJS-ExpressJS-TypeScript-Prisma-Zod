@@ -127,19 +127,21 @@ const cancelOrder = async (req: Request, res: Response) => {
         return;
     }
 
-    const order = await prisma.order.findUnique({ where: { id: orderId, userId: userId } });
-    if (!order) {
-        res.status(400).json({ error: "Order not found" });
-        return;
-    }
+    try {
+        const canceledOrder = await prisma.order.updateMany({
+            where: { id: orderId, userId, status: { in: ["PROCESSING", "ON_THE_WAY"] } },
+            data: { status: "CANCELLED" }
+        });
 
-    if (order.status !== "PROCESSING" && order.status !== "ON_THE_WAY") {
-        res.status(400).json({ error: "Order cannot be deleted" });
-        return;
-    }
+        if (canceledOrder.count === 0) {
+            res.status(400).json({ error: "Order not found or cannot be cancelled" });
+            return;
+        }
 
-    await prisma.order.update({ where: { id: orderId }, data: { deleted: true, deletedAt: new Date(), status: "CANCELLED" } });
-    res.status(200).json({ message: "Order deleted" });
+        res.status(200).json({ message: "Order cancelled successfully" });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
 };
 orderController.delete("/:orderId", verifyToken(), cancelOrder);
 

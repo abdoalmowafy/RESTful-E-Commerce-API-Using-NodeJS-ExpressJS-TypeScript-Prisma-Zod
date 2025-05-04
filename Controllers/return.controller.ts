@@ -32,14 +32,14 @@ const addReturn = async (req: Request, res: Response) => {
         include: { order: true },
         where: {
             orderId_productId: { orderId: request.orderId, productId: request.productId },
-            order: { userId: userId, deleted: false, status: "DELIVERED" },
+            order: { userId: userId, status: "DELIVERED" },
         }
     });
     if (!orderItem) {
         res.status(400).json({ error: "Invalid order item" });
         return;
     }
-    const returnedQuantity = (await prisma.return.findMany({ where: { orderId: request.orderId, deleted: false } })).reduce((acc, curr) => acc + curr.quantity, 0);
+    const returnedQuantity = (await prisma.return.findMany({ where: { orderId: request.orderId } })).reduce((acc, curr) => acc + curr.quantity, 0);
     if (orderItem.quantity + returnedQuantity < request.quantity) {
         res.status(400).json({ error: "Invalid quantity" });
         return;
@@ -73,12 +73,19 @@ returnController.post("/", verifyToken(), validateZodSchema(returnRequestSchema)
 const cancelReturn = async (req: Request, res: Response) => {
     const userId = req.params.userId;
     const returnId = req.params.returnId;
+
     try {
-        const deletedReturn = await prisma.return.update({
-            where: { id: returnId, userId: userId, status: { in: ["PROCESSING", "ON_THE_WAY"] } },
-            data: { status: "CANCELLED", deleted: true, deletedAt: new Date() }
+        const canceledReturn = await prisma.order.updateMany({
+            where: { id: returnId, userId, status: { in: ["PROCESSING", "ON_THE_WAY"] } },
+            data: { status: "CANCELLED" }
         });
-        res.status(200).json({ message: "Return cancelled successfully" });
+
+        if (canceledReturn.count === 0) {
+            res.status(400).json({ error: "Order not found or cannot be cancelled" });
+            return;
+        }
+
+        res.status(200).json({ message: "Order cancelled successfully" });
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
